@@ -594,6 +594,10 @@
       {
         "netclass": "Default",
         "pattern": ""
+      },
+      {
+        "netclass": "Power",
+        "pattern": "/VREF"
       }
     ]
   },
