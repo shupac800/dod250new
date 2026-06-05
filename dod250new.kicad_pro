@@ -510,7 +510,7 @@
     "pinned_symbol_libs": []
   },
   "meta": {
-    "filename": "buffer_overflow.kicad_pro",
+    "filename": "dod250new.kicad_pro",
     "version": 3
   },
   "net_settings": {
@@ -598,6 +598,10 @@
       {
         "netclass": "Power",
         "pattern": "/VREF"
+      },
+      {
+        "netclass": "Power",
+        "pattern": "/9V0_RAW"
       }
     ]
   },
@@ -606,7 +610,7 @@
       "gencad": "",
       "idf": "",
       "netlist": "",
-      "plot": "fabrication/",
+      "plot": "fabrication/v1.1/",
       "specctra_dsn": "",
       "step": "",
       "vrml": ""
@@ -767,8 +771,8 @@
     "subpart_id_separator": 0,
     "top_level_sheets": [
       {
-        "filename": "buffer_overflow.kicad_sch",
-        "name": "buffer_overflow",
+        "filename": "dod250new.kicad_sch",
+        "name": "dod250new",
         "uuid": "65eca179-3106-4a88-bde8-4fcb23cd7118"
       }
     ],
@@ -778,7 +782,7 @@
   "sheets": [
     [
       "65eca179-3106-4a88-bde8-4fcb23cd7118",
-      "buffer_overflow"
+      "dod250new"
     ]
   ],
   "text_variables": {},

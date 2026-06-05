@@ -1,6 +1,6 @@
 {
   "board": {
-    "active_layer": 7,
+    "active_layer": 1,
     "active_layer_preset": "",
     "auto_track_width": true,
     "hidden_netclasses": [],
@@ -35,7 +35,6 @@
       "footprint_text",
       "footprint_anchors",
       "ratsnest",
-      "grid",
       "footprints_front",
       "footprints_back",
       "footprint_values",
@@ -51,7 +50,7 @@
       "conflict_shadows",
       "shapes"
     ],
-    "visible_layers": "00000000_00000000_0ffcff37_ffffffff",
+    "visible_layers": "00000000_00000000_0ffcff37_ffffff7f",
     "zone_display_mode": 0
   },
   "git": {
@@ -61,7 +60,7 @@
     "ssh_key": ""
   },
   "meta": {
-    "filename": "buffer_overflow.kicad_prl",
+    "filename": "dod250new.kicad_prl",
     "version": 5
   },
   "net_inspector_panel": {
@@ -92,12 +91,12 @@
     "col_widths": [
       162,
       147,
+      98,
+      79,
       91,
-      67,
+      99,
       91,
-      91,
-      91,
-      71,
+      83,
       91,
       91
     ],

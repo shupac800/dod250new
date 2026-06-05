@@ -1,0 +1,62 @@
+** Drc report for dod250new.kicad_pcb **
+** Created on 2026-06-04T18:09:17 **
+** Report includes: Errors, Warnings **
+
+** Found 12 DRC violations **
+[missing_courtyard]: Footprint has no courtyard defined
+    Local override; warning
+    @(113.9750 mm, 145.2500 mm): Footprint G***
+[lib_footprint_issues]: Footprint 'SW_FSW800_3PDT' not found in library 'edaFactory'
+    Local override; warning
+    @(130.5000 mm, 148.0000 mm): Footprint SW1
+[lib_footprint_issues]: Footprint 'POT_ALPHA_RV16_VERT' not found in library 'edaFactory'
+    Local override; warning
+    @(114.7000 mm, 106.4075 mm): Footprint RV1
+[lib_footprint_issues]: Footprint 'POT_ALPHA_RV16_VERT' not found in library 'edaFactory'
+    Local override; warning
+    @(146.3000 mm, 106.4075 mm): Footprint RV2
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(154.6500 mm, 95.5075 mm): Segment of RV2 on F.Silkscreen
+    @(153.8000 mm, 95.5075 mm): NPTH pad of RV2
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(154.4900 mm, 93.8785 mm): Segment of RV2 on F.Silkscreen
+    @(153.8000 mm, 95.5075 mm): NPTH pad of RV2
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(138.1100 mm, 97.1365 mm): Segment of RV2 on F.Silkscreen
+    @(138.8000 mm, 95.5075 mm): NPTH pad of RV2
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(137.9500 mm, 95.5075 mm): Segment of RV2 on F.Silkscreen
+    @(138.8000 mm, 95.5075 mm): NPTH pad of RV2
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(123.0500 mm, 95.5075 mm): Segment of RV1 on F.Silkscreen
+    @(122.2000 mm, 95.5075 mm): NPTH pad of RV1
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(122.8900 mm, 93.8785 mm): Segment of RV1 on F.Silkscreen
+    @(122.2000 mm, 95.5075 mm): NPTH pad of RV1
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(106.5100 mm, 97.1365 mm): Segment of RV1 on F.Silkscreen
+    @(107.2000 mm, 95.5075 mm): NPTH pad of RV1
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(106.3500 mm, 95.5075 mm): Segment of RV1 on F.Silkscreen
+    @(107.2000 mm, 95.5075 mm): NPTH pad of RV1
+
+** Found 0 unconnected pads **
+
+** Found 0 Footprint errors **
+
+** Ignored checks **
+    - Track endpoint not centered on via
+    - Tuning profile track geometries
+    - Footprint doesn't match symbol's footprint filters
+    - Silkscreen clearance
+    - Silkscreen clipped by board edge
+
+** End of Report **
