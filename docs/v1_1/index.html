@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DOD 250 Overdrive Clone — PCB v1.1 Build Guide</title>
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+<header class="site">
+  <h1>DOD OD PREAMP 250 — Clone</h1>
+  <div class="sub">Build guide, bill of materials &amp; assembly instructions</div>
+  <span class="ver">PCB v1.1 &nbsp;·&nbsp; June 2026</span>
+</header>
+
+<nav class="toc">
+  <a href="#overview">Overview</a>
+  <a href="#erratum">Erratum</a>
+  <a href="#bom">BOM</a>
+  <a href="#layout">Layout</a>
+  <a href="#power">Power</a>
+  <a href="#footswitch">3PDT Footswitch</a>
+  <a href="#dpdt">DPDT Option</a>
+  <a href="#centerneg">Center-Negative Mod</a>
+  <a href="#assembly">Assembly</a>
+  <a href="../v1_0/">v1.0 board? →</a>
+</nav>
+
+<main>
+
+<h2 id="overview">Overview</h2>
+<p>This board is a clone of the classic DOD 250 Overdrive Preamp: a single
+TL071 op-amp in a non-inverting gain stage, hard-clipped by a pair of
+back-to-back 1N4148 diodes, with <strong>GAIN</strong> (500&nbsp;kΩ audio,
+<span class="refdes">RV1</span>) and <strong>LEVEL</strong> (100&nbsp;kΩ audio,
+<span class="refdes">RV2</span>) controls. All switching is true-bypass via a
+board-mounted 3PDT footswitch. Power is 9&nbsp;V from a 2.1&nbsp;mm barrel jack
+(<strong>center-positive</strong> as shipped — see the
+<a href="#centerneg">center-negative conversion</a>) or a 9&nbsp;V battery wired
+to the <span class="refdes">BATT+</span>&nbsp;/&nbsp;<span class="refdes">BATT−</span>
+pads. Idle current draw is roughly 2–3&nbsp;mA, plus about 15&nbsp;mA per
+status LED when lit.</p>
+
+<p>You are reading the guide for <strong>PCB v1.1</strong> — the revision with
+<code>v1.1</code> and a QR code on the front silkscreen. If your board has
+neither marking, you have a <a href="../v1_0/">v1.0 board — use that guide
+instead</a>; it needs additional corrections to the power circuit.</p>
+
+<h3>Downloads</h3>
+<ul class="dl">
+  <li><a href="../files/dod250new-v1_1-schematic.pdf">Schematic (PDF)</a></li>
+  <li><a href="../files/BOM.csv">Bill of materials (CSV)</a></li>
+  <li><a href="../files/dod250new_v1.1_gerbers.zip">Gerber fabrication files (ZIP)</a></li>
+  <li><a href="https://github.com/shupac800/dod250new">KiCad project source (GitHub)</a></li>
+</ul>
+
+<h2 id="erratum">Required correction — ground bond</h2>
+
+<div class="callout fix">
+<span class="title">Required for the pedal to pass signal</span>
+<p>On this revision the <em>audio</em> ground net (jack sleeves, pot lug&nbsp;3,
+the clipping diodes, <span class="refdes">R1</span>) and the <em>power</em>
+ground net (op-amp pin&nbsp;4, the supply filter caps, the DC-jack sleeve) are
+routed as two separate nets that are <strong>never joined anywhere on the
+board</strong>. Without a bond between them there is no signal return path:
+the pedal will not pass audio.</p>
+<p><strong>Fix (one wire):</strong> on the back of the board, solder a short
+jumper (~12&nbsp;mm) from the <em>left-hand pad of
+<span class="refdes">C7</span></em> (the 1&nbsp;nF film cap beside the LEVEL
+pot — use the pad nearer <span class="refdes">C3</span>) to the
+<em>negative pad of <span class="refdes">C3</span></em> (the 10&nbsp;µF
+electrolytic; its negative pad is the one the stripe on the can points to).
+Any audio-ground point to any power-ground point works; this pair is the
+shortest hop that stays clear of the DC-jack area, so it remains correct even
+if you later do the <a href="#centerneg">center-negative conversion</a>.</p>
+</div>
+
+<h2 id="bom">Bill of materials</h2>
+
+<table>
+<tr><th>Ref</th><th>Value</th><th>Description</th><th>Part no.</th><th>Source</th></tr>
+<tr><td>R1, R7</td><td>1&nbsp;M</td><td>Carbon film, 1/4&nbsp;W 5%, axial DIN0207</td><td>YAGEO CFR-25JB-52-1M</td><td>Mouser</td></tr>
+<tr><td>R2, R3</td><td>22&nbsp;k</td><td>Carbon film, 1/4&nbsp;W 5%, axial DIN0207</td><td>YAGEO CFR-25JB-52-22K</td><td>Mouser</td></tr>
+<tr><td>R4, R6, R8</td><td>10&nbsp;k</td><td>Carbon film, 1/4&nbsp;W 5%, axial DIN0207</td><td>YAGEO CFR-25JB-52-10K</td><td>Mouser</td></tr>
+<tr><td>R5</td><td>4.7&nbsp;k</td><td>Carbon film, 1/4&nbsp;W 5%, axial DIN0207</td><td>YAGEO CFR-25JB-52-4K7</td><td>Mouser</td></tr>
+<tr><td>R9</td><td>470&nbsp;R</td><td>Carbon film, 1/4&nbsp;W 5%, axial DIN0207 (LED series resistor)</td><td>YAGEO CFR-25JB-52-470R</td><td>Mouser</td></tr>
+<tr><td>C1</td><td>100&nbsp;µF</td><td>Aluminum electrolytic, 25&nbsp;V, radial D6.3&nbsp;mm, 2.5&nbsp;mm pitch</td><td>Panasonic ECA-1EM101</td><td>Mouser</td></tr>
+<tr><td>C2</td><td>100&nbsp;nF</td><td>Film, box, 5.0&nbsp;mm pitch</td><td>KEMET PHE450KB6100JR05L2</td><td>Mouser</td></tr>
+<tr><td>C3</td><td>10&nbsp;µF</td><td>Aluminum electrolytic, 25&nbsp;V, radial D5.0&nbsp;mm, 2.0&nbsp;mm pitch</td><td>Panasonic ECA-1EM100</td><td>Mouser</td></tr>
+<tr><td>C4</td><td>10&nbsp;nF</td><td>Film, box, 5.0&nbsp;mm pitch</td><td>KEMET PHE450KB4100JR05L2</td><td>Mouser</td></tr>
+<tr><td>C5</td><td>120&nbsp;pF</td><td>Ceramic disc, C0G, 200&nbsp;V, 2.5&nbsp;mm pitch</td><td>KEMET C315C121J2G5TA</td><td>Mouser</td></tr>
+<tr><td>C6</td><td>4.7&nbsp;µF</td><td>Aluminum electrolytic, 50&nbsp;V, radial D5.0&nbsp;mm, 2.5&nbsp;mm pitch</td><td>Panasonic ECA-1HM4R7</td><td>Mouser</td></tr>
+<tr><td>C7</td><td>1&nbsp;nF</td><td>Film, box, 5.0&nbsp;mm pitch</td><td>KEMET PHE450KB4010JR05L2</td><td>Mouser</td></tr>
+<tr><td>D1</td><td>1N4001</td><td>Rectifier, DO-41 (reverse-polarity protection)</td><td>any manufacturer</td><td>Mouser</td></tr>
+<tr><td>D2, D3</td><td>1N4148</td><td>Signal diode, DO-35 (clipping pair)</td><td>any manufacturer</td><td>Mouser</td></tr>
+<tr><td>D4, D5</td><td>LED</td><td>3&nbsp;mm red diffused (two alternative positions — populate either or both)</td><td>Kingbright WP710A10LSRD</td><td>Mouser</td></tr>
+<tr><td>U1</td><td>TL071</td><td>JFET-input op-amp, single, DIP-8</td><td>TI TL071CP</td><td>Mouser</td></tr>
+<tr><td>XU1</td><td>—</td><td>IC socket, DIP-8 (for U1)</td><td>Amphenol DILB8P-223TLF</td><td>Mouser</td></tr>
+<tr><td>J2, J3</td><td>—</td><td>6.35&nbsp;mm mono switched jack, horizontal PCB</td><td>Neutrik NRJ4HF</td><td>Mouser</td></tr>
+<tr><td>J1</td><td>—</td><td>2.1&nbsp;mm barrel jack with switch, horizontal PCB</td><td>GCT DCJ200-10-A</td><td>Mouser</td></tr>
+<tr><td>RV1</td><td>A500K</td><td>GAIN — 500&nbsp;k audio, Alpha 16&nbsp;mm PCB-mount, D-shaft</td><td>Tayda A-3229</td><td>Tayda / Arcadia</td></tr>
+<tr><td>RV2</td><td>A100K</td><td>LEVEL — 100&nbsp;k audio, Alpha 16&nbsp;mm PCB-mount, D-shaft</td><td>Tayda A-3227</td><td>Tayda</td></tr>
+<tr><td>SW1</td><td>3PDT</td><td>Latching footswitch, PCB-pin, 9-pin (see <a href="#footswitch">below</a>)</td><td>Taiwan Alpha SF17010F-0302-21R-L<br>= StompBox Parts FSW-800-1028;<br>budget: Tayda A-1842, Love My Switches 3PDT-PCB</td><td>specialty suppliers</td></tr>
+</table>
+
+<p>The pedal-style 3PDT stomp switch is not stocked by Mouser or the other big
+catalog distributors; order it from a guitar-pedal specialty supplier
+(StompBox Parts, Love My Switches, Tayda). Everything else is a Mouser line
+item — the BOM CSV above has exact part numbers. A DPDT footswitch can
+substitute with limitations: see <a href="#dpdt">DPDT option</a>.</p>
+
+<h2 id="layout">Board layout</h2>
+
+<div class="imgrow">
+  <figure>
+    <img src="../img/v1_1-front.png" alt="v1.1 PCB front (component side)">
+    <figcaption>Front (component side). Jacks along the top edge: input
+    <span class="refdes">J2</span> left, DC jack <span class="refdes">J1</span>
+    center, output <span class="refdes">J3</span> right. Footswitch
+    <span class="refdes">SW1</span> at the bottom; battery pads
+    <span class="refdes">BATT+</span>/<span class="refdes">BATT−</span> at
+    lower right.</figcaption>
+  </figure>
+  <figure>
+    <img src="../img/v1_1-back.png" alt="v1.1 PCB back (solder side)">
+    <figcaption>Back (solder side) — where the ground-bond jumper and any
+    center-negative modifications are made.</figcaption>
+  </figure>
+</div>
+
+<figure class="schem">
+  <img src="../img/v1_1-schematic.svg" alt="v1.1 schematic">
+  <figcaption>Full schematic (v1.1) — <a href="../files/dod250new-v1_1-schematic.pdf">PDF version</a>.</figcaption>
+</figure>
+
+<h2 id="power">The power circuit</h2>
+
+<p>The DC input chain is: barrel-jack center pin
+(<span class="refdes">J1</span> pin&nbsp;1) → raw 9&nbsp;V net → series diode
+<span class="refdes">D1</span> (1N4001) → protected 9&nbsp;V rail. Everything
+that consumes power — <span class="refdes">U1</span> pin&nbsp;7, the status
+LEDs, the supply filters <span class="refdes">C1</span>/<span class="refdes">C2</span>,
+and the V<sub>ref</sub> divider <span class="refdes">R2</span>/<span class="refdes">R3</span>/<span class="refdes">C3</span>
+— sits downstream of <span class="refdes">D1</span>. Plug in a reversed
+supply (or a backwards battery) and <span class="refdes">D1</span> simply
+blocks: no damage, no sound, costing you only ~0.7&nbsp;V of headroom in
+normal operation.</p>
+
+<h3>Battery switching</h3>
+<p>The barrel jack has an internal normally-closed switch between its sleeve
+contact (pin&nbsp;2, ground) and its switch pin (pin&nbsp;3). The battery
+positive lead (<span class="refdes">BATT+</span> pad) ties to the raw 9&nbsp;V
+net; the battery negative lead (<span class="refdes">BATT−</span> pad) goes to
+jack pin&nbsp;3. With no plug inserted the sleeve leaf rests on pin&nbsp;3,
+grounding the battery negative — the battery powers the pedal. Inserting a DC
+plug lifts the leaf and disconnects the battery.</p>
+
+<div class="callout warn">
+<span class="title">Battery drain</span>
+<p>Unlike pedals that switch the battery through the input-jack ring, this
+board keeps the battery connected whenever no DC plug is inserted —
+regardless of whether a guitar cable is plugged in. (The input jack&rsquo;s
+switched contact is used to ground the input against pops instead.) For
+storage, unsnap the battery or leave a dummy DC plug inserted.</p>
+</div>
+
+<h2 id="footswitch">Wiring the 3PDT footswitch</h2>
+
+<p>The board is laid out for a PCB-pin 3PDT latching stomp switch on the
+standard Taiwan-Alpha 9-pin grid: three columns 5.3&nbsp;mm either side of
+center, three rows on 4.8&nbsp;mm pitch, 1.5&nbsp;mm holes. If you bought one
+of the parts listed in the BOM, there is no &ldquo;wiring&rdquo; — drop it
+into the <span class="refdes">SW1</span> footprint and solder all nine pins.
+The switch is symmetric: either rotation that fits the grid works, because
+each pole&rsquo;s common is the center pin of its column.</p>
+
+<p>Looking at the <strong>front</strong> of the board, switch at the bottom,
+jacks away from you, the <span class="refdes">SW1</span> pads carry these
+signals:</p>
+
+<div class="swgrid">         LED pole        input pole        output pole
+        (left col)      (middle col)      (right col)
+
+ row    9  (n.c.)       6  ──bridge──     3  ──bridge──    ← toward pots
+nearest                    (6 and 3 joined by a board trace)
+ pots
+
+ middle 8  ground       5  input jack     2  output jack   ← the COMMONS
+ row                       tip (J2)          tip (J3)
+
+ row    7  LED via R9   4  circuit IN     1  circuit OUT   ← toward bottom
+nearest                    (to C4/R1)        (from LEVEL        edge
+ edge                                         pot wiper)</div>
+
+<p>How it works: each press of the latching switch connects the middle-row
+commons to one outer row or the other.</p>
+<ul class="tight">
+  <li><strong>Engaged:</strong> commons connect to the bottom row — input-jack
+  tip feeds the circuit input (5→4), the LEVEL pot wiper feeds the output jack
+  (2→1), and the LED cathode path is grounded through
+  <span class="refdes">R9</span> (8→7), lighting the status LED.</li>
+  <li><strong>Bypassed:</strong> commons connect to the top row — pads 6 and 3
+  are bridged by a trace on the board, so the input-jack tip is wired straight
+  to the output-jack tip (5→6→3→2). The LED pole lands on pad&nbsp;9, which is
+  unconnected, so the LED goes dark. The signal never touches the circuit:
+  true bypass.</li>
+</ul>
+
+<h3>Using a solder-lug 3PDT off-board</h3>
+<p>If your switch has solder lugs instead of PCB pins (or you want the switch
+mounted to the enclosure away from the board), wire each lug to its
+corresponding <span class="refdes">SW1</span> pad with hookup wire, matching
+the 3×3 grid above — lug&nbsp;5 (center of the middle column) to pad&nbsp;5,
+and so on. Eight wires are enough: pad&nbsp;9 connects to nothing, so its lug
+can be skipped. Keep the two signal-pole wire runs (pads 1–6) short and away
+from the power wiring to avoid bypass-mode crosstalk.</p>
+
+<h2 id="dpdt">Substituting a DPDT footswitch</h2>
+
+<p>A DPDT latching footswitch (e.g. Tayda A-361) can replace the 3PDT, but it
+has only two poles — both are consumed by the input and output signal
+switching, leaving nothing to switch the status LED.</p>
+
+<ol class="steps">
+  <li>Fit the two DPDT columns into the <strong>middle and right columns</strong>
+  of the <span class="refdes">SW1</span> footprint (pads 1–6). The row pitch
+  (4.8&nbsp;mm) matches the standard pedal DPDT; verify the column spacing of
+  your particular switch against the 5.3&nbsp;mm grid before ordering, and
+  dress the pins to fit if slightly off.</li>
+  <li>The left column (pads 7/8/9 — the LED pole) stays empty. True bypass
+  works exactly as with the 3PDT: the on-board 3–6 bridge still carries the
+  bypassed signal.</li>
+  <li>For the status LED, choose one:
+    <ul class="tight">
+      <li><strong>Omit it</strong> — leave D4/D5 and R9 unpopulated; or</li>
+      <li><strong>Always-on power indicator</strong> — solder a wire jumper
+      across pads <strong>7 and 8</strong> of the empty LED column. That
+      permanently grounds the LED&rsquo;s return through
+      <span class="refdes">R9</span>, so the LED lights whenever the pedal has
+      power, regardless of bypass state.</li>
+    </ul>
+  </li>
+</ol>
+
+<h2 id="centerneg">Converting the DC jack to center-negative</h2>
+
+<h3>Why you might want this</h3>
+<p>As shipped, the board expects a <strong>center-positive</strong> 9&nbsp;V
+supply — the vintage MXR/DOD-era convention. Virtually every modern pedal
+supply, one-spot, and pedalboard daisy chain is <strong>center-negative</strong>
+(the Boss convention). Converting the jack lets the pedal share a standard
+pedalboard supply without a special cable. If you&rsquo;d rather not modify
+the board, a polarity-reversing adapter cable accomplishes the same thing —
+and thanks to <span class="refdes">D1</span>, plugging a center-negative
+supply into the unmodified v1.1 board causes <em>no damage</em>; the pedal
+just stays silent until correct power arrives.</p>
+
+<h3>What does <em>not</em> change</h3>
+<div class="callout warn">
+<span class="title">Component polarity stays exactly as marked</span>
+<p>The conversion below swaps which <em>jack terminal</em> feeds which net,
+<em>upstream</em> of <span class="refdes">D1</span>. The board&rsquo;s
+internal rail remains +9&nbsp;V either way, so <span class="refdes">D1</span>
+(band toward <span class="refdes">C1</span>), the electrolytics
+<span class="refdes">C1</span>/<span class="refdes">C3</span>/<span class="refdes">C6</span>,
+and the LEDs are all installed exactly per the silkscreen. Do <em>not</em>
+attempt the conversion by reversing <span class="refdes">D1</span> and the
+electrolytics instead — <span class="refdes">U1</span>&rsquo;s supply pins,
+the LEDs, and the battery pads are hard-wired to the board nets, and flipping
+the rail would put the TL071&rsquo;s V+ pin below its V− pin. The swap must
+happen at the jack.</p>
+</div>
+
+<h3>The procedure</h3>
+<p>Four trace cuts, four jumpers. Make the cuts <em>before</em> soldering
+<span class="refdes">J1</span> — two of them are easier to reach with the
+jack off the board. Confirm every cut with a continuity meter.</p>
+
+<p><strong>Cuts</strong> — each trace is cut where it leaves the
+<span class="refdes">J1</span> pad:</p>
+<ol class="steps">
+  <li><strong>Back side:</strong> the short trace running <em>left</em> from
+  <span class="refdes">J1</span> pin&nbsp;1 (center pin, the middle pad) to
+  the top pad of <span class="refdes">D1</span>.</li>
+  <li><strong>Front side:</strong> the trace leaving
+  <span class="refdes">J1</span> pin&nbsp;1 to the <em>right</em>, running
+  down the right side of the board to the <span class="refdes">BATT+</span>
+  pad.</li>
+  <li><strong>Back side:</strong> the trace running <em>right</em> from
+  <span class="refdes">J1</span> pin&nbsp;2 (sleeve, the pad nearest the board
+  edge) down to the negative pad of <span class="refdes">C1</span>.</li>
+  <li><strong>Front side:</strong> the trace running <em>right</em> from
+  <span class="refdes">J1</span> pin&nbsp;3 (the offset switch pad) along the
+  top of the board and down the right edge to the
+  <span class="refdes">BATT−</span> pad.</li>
+</ol>
+
+<p><strong>Jumpers</strong> (insulated wire on the back of the board):</p>
+<ol class="steps">
+  <li><span class="refdes">J1</span> pin&nbsp;2 (sleeve — now the +9&nbsp;V
+  input) → top pad of <span class="refdes">D1</span> (anode).</li>
+  <li><span class="refdes">J1</span> pin&nbsp;1 (center — now ground) →
+  negative pad of <span class="refdes">C1</span> (or any power-ground
+  point).</li>
+  <li><span class="refdes">BATT+</span> pad → <span class="refdes">J1</span>
+  pin&nbsp;3. The battery positive now goes through the jack&rsquo;s switch:
+  with no plug inserted, pin&nbsp;3 rests against the sleeve contact and the
+  battery feeds <span class="refdes">D1</span>; inserting a plug disconnects
+  it — same behavior as stock, on the other supply leg.</li>
+  <li><span class="refdes">BATT−</span> pad → any power-ground point
+  (<span class="refdes">U1</span> pin&nbsp;4 or the negative pad of
+  <span class="refdes">C1</span>).</li>
+</ol>
+
+<p>If you will never fit a battery, cuts 2 and 4 and jumpers 3 and 4 can be
+skipped — but then leave the battery pads permanently unused: with the jack
+swapped, a battery wired to the stock pads would see reversed polarity.</p>
+
+<p>Note for the <a href="#erratum">ground-bond erratum</a>: bond at
+<span class="refdes">C7</span>/<span class="refdes">C3</span> as instructed
+above, <em>not</em> at <span class="refdes">J1</span> pin&nbsp;2 — after this
+conversion pin&nbsp;2 is no longer ground.</p>
+
+<h2 id="assembly">Assembly notes</h2>
+
+<ol class="steps">
+  <li><strong>Decide on jack polarity first.</strong> If converting to
+  center-negative, make the four trace cuts before any parts go in.</li>
+  <li>Populate by height: diodes and resistors first (note
+  <span class="refdes">D1</span> band toward <span class="refdes">C1</span>;
+  <span class="refdes">D2</span>/<span class="refdes">D3</span> bands opposed,
+  per silkscreen), then the IC socket (notch matches silkscreen), film and
+  ceramic caps, electrolytics (stripe = negative), LEDs (flat = cathode),
+  jacks, pots, and the footswitch last.</li>
+  <li><span class="refdes">D4</span> and <span class="refdes">D5</span> are
+  two alternative positions for the same status LED, wired in parallel and
+  sharing <span class="refdes">R9</span> — populate whichever suits your
+  enclosure (or both; each adds ~15&nbsp;mA when lit). Stand the LED off the
+  board on long leads if it must reach a hole in the enclosure top.</li>
+  <li><strong>Add the <a href="#erratum">ground-bond jumper</a></strong> —
+  the pedal will not pass audio without it.</li>
+  <li>Battery (optional): solder a 9&nbsp;V snap&rsquo;s red lead to
+  <span class="refdes">BATT+</span> and black lead to
+  <span class="refdes">BATT−</span>.</li>
+  <li>Insert the TL071 in its socket, apply 9&nbsp;V, and verify roughly
+  +4.2&nbsp;V at <span class="refdes">U1</span> pins 3 and 6 (V<sub>ref</sub>
+  bias) before connecting a guitar.</li>
+</ol>
+
+</main>
+
+<footer class="site">
+  DOD 250 clone PCB by David Shuman · davidshuman@gmail.com ·
+  <a href="https://github.com/shupac800/dod250new">github.com/shupac800/dod250new</a> ·
+  <a href="../v1_0/">v1.0 build guide</a>
+</footer>
+
+</body>
+</html>
