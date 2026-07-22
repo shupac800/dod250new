@@ -1,0 +1,63 @@
+# Hearing Things: Reification, Category Error, and the Psychology of the "Signal Path"
+
+**Date:** July 17, 2026
+
+Announce in a forum of amplifier builders that two cathode bypass capacitors of the same value but different construction may sound different, and the replies will teach you less about electronics than about the psychology of belief. "You're bypassing to ground; you never hear that bit of the signal." "A 100 microfarad capacitor is a 100 microfarad capacitor." And, from a correspondent announcing forty-five years as a design engineer: "You are hearing things out of your imagination, my friend."
+
+The engineering argument belongs elsewhere. It is enough here to say that a bypass capacitor is not causally absent merely because it does not sit on the schematic line a builder has learned to call "the signal path." Its impedance helps set the conditions under which the tube operates, and real capacitors are not ideal schematic symbols. Whether a particular difference is audible in a particular circuit is an empirical question. The point of this essay is narrower: why do so many objections begin by declaring the question impossible?
+
+An error about capacitors, if it were merely an error, would invite correction. Contempt is reserved for threats. What, exactly, was being threatened is the subject of this essay.
+
+## Reification: The Line Becomes a Pipe
+
+The philosophical mistake at the bottom of these replies is old enough to have several names. Whitehead called it the fallacy of misplaced concreteness. Korzybski compressed it into the slogan that the map is not the territory. The plainer word is *reification*: taking an abstraction — a concept, a convention, a line on a diagram — and treating it as a physical thing.
+
+The "signal path" is exactly such an abstraction, born on the block diagram, where it is useful and even indispensable. The guitar feeds the input stage, which feeds the tone controls, which feed the phase inverter, which feeds the output stage. The lines connecting those boxes show how information moves between functional sections, and at that level of description, "the signal goes from the preamp to the phase inverter" is a perfectly good sentence.
+
+The trouble begins when the phrase is carried outside that context — when the line steps off the diagram and takes up residence inside the amplifier, becoming a pipe, with the signal a substance flowing through it. Now every component can be sorted by a simple test: is it in the pipe or not? Components in the pipe touch the precious fluid and may affect it. Components outside the pipe are plumbing for the plumbing. "The signal doesn't pass through them," therefore they cannot matter.
+
+The picture is seductive because humans are superb at reasoning about transport. We instinctively ask where a thing enters, what it passes through, and where it comes out. But an amplifier is not a transport system. The guitar does not supply the energy that moves the speaker cone; the power supply does. The guitar signal is a control signal, governing how the amplifier converts stored energy into an output waveform, rather as a thermostat governs a furnace without a single calorie of heat passing through the thermostat.
+
+Current, meanwhile, flows in complete loops. In a bypassed cathode circuit, much of the stage's varying current returns to ground through the bypass capacitor — the component dismissed as "outside the signal path" is the one carrying the current. The pipe picture is not merely wrong; it is backwards.
+
+Whether a particular construction difference is audible in a particular circuit remains an empirical question, to be settled by analysis, measurement, and listening. What collapses here is only the claim of impossibility — an argument that mistook a diagrammatic convention for a boundary of physical causation.
+
+And the substance imagined to be flowing dissolves on inspection. When a string vibrates, voltages and currents throughout the amplifier change together, each according to its place in the circuit; the "signal" is that coordinated pattern of changes. Open any of the black boxes and you will find no literal signal path inside, for the same reason you will find no pastel-pink stripe painted on the highway depicted by a road map.
+
+## The Category Error
+
+Gilbert Ryle told the story of a visitor to Oxford who, having toured the colleges, libraries, and playing fields, asks: "But where is the University?" The visitor has committed a category error: treating an organizing abstraction as though it were one more item in the inventory of things it organizes.
+
+"Is it in the signal path?" is the same kind of question, asking about a feature of a block diagram as though it were a feature of a physical circuit. The critic's syllogism runs: signal passes through components in the path; the bypass capacitor is not in the path; therefore no signal passes through it; therefore it cannot affect the sound.
+
+Every step trades on the category error. "In the path" is a fact about where a symbol sits on a drawing. "Affects the sound" is a fact about the physical behavior of an electrical network. The syllogism transports a predicate from the map to the territory and never notices the border crossing.
+
+The error then repeats itself at finer resolution. "A 100 microfarad capacitor is a 100 microfarad capacitor" mistakes the capacitor symbol for the capacitor. The symbol records one number — an idealized capacitance — because that is often all the circuit analysis requires. The physical device has equivalent series resistance, dielectric absorption, leakage, voltage dependence, temperature dependence, and frequency-dependent behavior that varies with construction. The critic's maneuver forecloses the empirical question by consulting the idealization, deducing from a model expressly designed to omit certain effects the impossibility of those effects.
+
+There is a rich irony here. The critics style themselves as hard-headed empiricists standing against audiophile mysticism, yet declaring a difference impossible because the schematic symbol predicts none inverts empiricism into scholasticism: settling questions about the world by consulting what is imagined to be the authoritative text.
+
+## The Psychology: Why the Anger?
+
+A wrong argument explains the disagreement. The heat requires psychology.
+
+**Identity-protective cognition.** Dan Kahan's work on identity-protective cognition shows that people evaluate claims partly by what accepting them would cost their standing in the groups that define them. For someone who leads with "I am an electronics design engineer with forty-five years of experience," the signal-path heuristic is more than a tool; it is part of the furniture of a professional self. Hence biography appearing where analysis should be: "here is who I am," offered in place of "here is why the impedance does not matter in this circuit." The autobiography is not evidence about capacitors; it is evidence about what is being defended.
+
+**The skeptic identity.** In audio circles, debunking is a status game with its own uniform. "I ain't fooled by snake oil" is a badge, earned by pattern-matching: any claim of audible difference between nominally identical parts resembles the claims of the oxygen-free-copper crowd, and is filed accordingly — mechanism unread, argument unengaged. The tell in this thread: the original claim came attached to a mechanism, frequency-dependent impedance and nonideal behavior differing by construction, and no reply engaged it. Each replied instead to the category of claim. Skepticism, which is supposed to be a method, has been converted into tribal identity.
+
+**Dunning–Kruger, in its cruelest form.** These critics can build working amplifiers; they have for decades. But building and understanding are different competencies, and a long career of the first can impersonate the second. A man can spend forty-five years assembling circuits from proven topologies, biasing tubes by the book, and shipping amplifiers that work, while the question of what every component is actually doing never once gets asked, because it never needs to be. The recipe succeeds whether or not the cook understands the chemistry. Here is the cruelty of the structure Dunning and Kruger described, as it operates in a technical craft: forty-five years of successful builds *feels* like forty-five years of accumulating evidence for the proposition "I understand these circuits," when the builds tested only the recipes. The understanding was asserted daily and examined never, and a claim asserted for half a century without examination becomes, from the inside, indistinguishable from knowledge. The critic has not internalized what the model omits, because knowing what a model omits is precisely the knowledge the model cannot supply.
+
+**The illusion of explanatory depth.** Rozenblit and Keil demonstrated that people believe they understand mechanisms in far greater detail than they can produce on demand; asked for the actual explanation, the understanding collapses into the slogan it always was. "It's just a decoupling capacitor providing a low-impedance return path between the cathode and ground" is such a slogan, and it contains its own undoing. The sentence is true — and it concedes the entire dispute, since a low-impedance path through which the stage's varying current flows can hardly be causally irrelevant to the stage. The critic has recited the mechanism of my claim as a refutation of it: fluent in the sentence, oblivious to its meaning. Ask him to trace the currents in the circuit he has just described, and the confident formula would have to become an actual analysis — exactly the step his signal-path objection avoided.
+
+**Belief perseverance.** Notice next that the objections contradict one another. One critic says you never hear "that bit of the signal," conceding that signal exists in the cathode circuit but claiming it is discarded. Another says no signal passes through the component at all. The positions are mutually exclusive, yet they circulate in the same thread as interchangeable weapons, and no critic corrects another. Contradiction matters to arguments that carry weight; decorations on a conclusion reached in advance can clash all they like, since no one is looking at them — least of all the decorators. The conclusion, "he can't be right," came first. The reasons were dispatched afterward, in whatever order they came to hand.
+
+**The dogpile.** Notice, finally, that the response was collective, and understand why it had to be. A heretic presents the group with an opportunity: attacking him is cheaper than examining his claim, and each attack is paid for instantly in the group's approval. But the pile-on has a defensive function beyond the status economics. Every man in that thread has the same self-appraisal riding on the same heuristic. A suggestion that damaged one man's picture of himself damaged all of them simultaneously — which is why the reply arrived as a dogpile rather than an argument, and why no critic paused to reconcile his objection with his neighbor's.
+
+## The Territory Answers
+
+The hard lesson in "the map is not the territory" is that long service as a mapmaker confers no immunity from confusing the two. If anything the risk grows, because the map has paid the mapmaker's salary for forty-five years, and gratitude curdles easily into faith.
+
+Fluency in a model is cheap; every critic in that thread has it. Understanding is knowing where the model ends — which effects the abstraction was built to ignore, under what conditions the ignored effects come home, and what kind of evidence would decide the question. That knowledge cannot be read off the simplified model, which is why its absence is so often filled with certainty.
+
+And certainty, when challenged, turns hot. That heat is the most informative datum in the exchange. A person merely correcting an error about capacitors can afford patience. A person defending a self-portrait sounds exactly like the thread. The contempt arrives before the analysis because the perceived threat arrives before the question is understood.
+
+"Is it in the signal path?" turns out to be a revealing question after all, though it reveals nothing about the amplifier. The better question asks what role a component plays in the circuit's changing conditions, wherever its symbol happens to sit on the drawing. The territory answers in voltages, currents, impedances, and transfer functions. The map can help us ask better questions, but it is no subsitute for the territory when technical understanding is the goal.

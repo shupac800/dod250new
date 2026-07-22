@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tempest Character Symmetry and the "Z-Timing" Claim</title>
+<style>
+:root{
+  --ink:#202428; --muted:#5d6872; --line:#d7dde2;
+  --accent:#8c331f; --accent2:#153f58; --paper:#ffffff; --wash:#f4f6f7;
+}
+*{box-sizing:border-box}
+body{margin:0;background:#e9ecef;color:var(--ink);
+  font-family:Georgia,'Times New Roman',serif;font-size:17px;line-height:1.6}
+.layout{max-width:1260px;margin:0 auto;padding:28px;display:flex;gap:28px;align-items:flex-start}
+nav#toc{position:sticky;top:28px;flex:0 0 250px;max-height:calc(100vh - 56px);overflow-y:auto;
+  background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:18px 20px;
+  font-family:'Segoe UI',system-ui,sans-serif;font-size:.85rem}
+nav#toc h2{margin:0 0 10px;font-size:.8rem;text-transform:uppercase;letter-spacing:.08em;
+  color:var(--muted);border:none;padding:0}
+nav#toc a{display:block;color:var(--accent2);text-decoration:none;padding:3px 0;line-height:1.35}
+nav#toc a:hover{text-decoration:underline}
+nav#toc a.h3{padding-left:16px;color:var(--muted)}
+main{flex:1;min-width:0;max-width:900px;background:var(--paper);border:1px solid var(--line);
+  border-radius:10px;padding:52px 62px 70px;box-shadow:0 8px 30px rgba(22,35,44,.09)}
+h1{font-family:'Segoe UI',system-ui,sans-serif;font-size:2.35rem;line-height:1.15;
+  letter-spacing:-.015em;color:var(--accent2);margin:0 0 .4em;
+  padding-bottom:.35em;border-bottom:3px solid var(--accent)}
+.subtitle{font-family:'Segoe UI',system-ui,sans-serif;font-size:1.15rem;color:var(--muted);
+  margin:0 0 1.4em;line-height:1.4}
+.meta{font-family:'Segoe UI',system-ui,sans-serif;font-size:.9rem;background:var(--wash);
+  border:1px solid var(--line);border-radius:8px;padding:12px 16px;margin:0 0 2em;line-height:1.7}
+h2{font-family:'Segoe UI',system-ui,sans-serif;font-size:1.5rem;color:var(--accent2);
+  margin:2.2em 0 .6em;padding-bottom:.25em;border-bottom:1px solid var(--line)}
+h3{font-family:'Segoe UI',system-ui,sans-serif;font-size:1.1rem;color:var(--accent2);margin:1.6em 0 .5em}
+p{margin:.9em 0}
+ul,ol{margin:.9em 0;padding-left:1.6em}
+li{margin:.35em 0}
+strong{color:var(--ink)}
+code{font-family:'Cascadia Mono',Consolas,monospace;font-size:.85em;background:var(--wash);
+  border:1px solid var(--line);border-radius:4px;padding:1px 5px;color:#31404a}
+pre{background:#17242c;color:#dde6ec;border-radius:8px;padding:16px 20px;overflow-x:auto;
+  font-size:.82rem;line-height:1.55;margin:1.1em 0}
+pre code{background:none;border:none;padding:0;color:inherit;font-size:1em}
+a{color:#1a5c8a}
+@media (max-width:900px){
+  .layout{flex-direction:column;padding:0}
+  nav#toc{position:static;flex:none;width:100%;max-height:none;border-radius:0}
+  main{padding:28px 20px 44px;border-radius:0;max-width:none}
+}
+@media print{
+  body{background:#fff}
+  nav#toc{display:none}
+  .layout{display:block;padding:0;max-width:none}
+  main{border:none;box-shadow:none;padding:0;max-width:none;font-size:11pt}
+  h1,h2,h3{page-break-after:avoid}
+  pre{page-break-inside:avoid;background:#f4f6f7;color:#202428;border:1px solid #d7dde2}
+  a{color:#202428;text-decoration:none}
+}
+</style>
+</head>
+<body>
+<div class="layout">
+<nav id="toc"><h2>Contents</h2></nav>
+<main id="doc">
+
+<h1>Tempest Character Symmetry and the "Z-Timing" Claim</h1>
+<p class="subtitle">ROM-level analysis of vector character geometry, AVG blanking architecture, and a replica PCB's asymmetric-character defect</p>
+<div class="meta">
+<strong>Subject:</strong> Claim that original Atari color-vector PCBs drew characters with uneven "legs" due to Z timing<br>
+<strong>Evidence base:</strong> Tempest vector ROMs (rev 3 and rev 4/5), MAME AVG state-machine source, WG6100 field experience<br>
+<strong>Document date:</strong> July 21, 2026
+</div>
+
+<h2>Executive summary</h2>
+<p>A public post by a replica-PCB builder claims that original Atari color-vector hardware never drew a "perfect picture," illustrating the point with a letter "A" whose two legs differ visibly in length, and framing his board's matching behavior as faithful reproduction of "RGB Z timing" on original boards. This analysis tests that claim against the primary sources: the actual bytes of the Tempest vector ROMs, the Analog Vector Generator (AVG) architecture as modeled at the latch level in MAME, and decades of direct observation of original PCBs on Wells-Gardner 6100 monitors.</p>
+<p>The finding is that the claim fails at every level. The character glyphs are defined mirror-symmetric in ROM, identically in both vector-ROM revisions. MAME applies no correction; it simply renders the coded endpoints. The original AVG architecture generates blanking (Z) and deflection from a single synchronous state machine, so the digital Z-versus-deflection skew the post describes cannot exist on original hardware. The residual analog effects that do exist are nanosecond-scale and produce endpoint dots and corner rounding, not leg-length asymmetry; critically, the beam physically never travels below the character baseline, so a "longer right leg" is geometrically impossible on an original board. A replica that re-derives Z and deflection through separate pipelines can create exactly this defect, and a production board exhibiting it has a design bug, not period-accurate behavior.</p>
+
+<h2>1. The claim under examination</h2>
+<p>The post asserts that the builder and a collaborator are "tweaking RGB Z timing to match original atari color vector pcbs... as close as possible all the way down to 1 clock cycle," then "tunning the analog section to match original hardware." It presents two renderings of the letter A: a symmetric one labeled "new pcb" and one with legs of visibly different lengths labeled "original pcb," and asks whether vectors should be "fixed" or replicated exactly &mdash; the premise being that original hardware displayed the asymmetric version.</p>
+<p>Three questions decide the matter:</p>
+<ol>
+<li>Does the Tempest code define characters with symmetric legs?</li>
+<li>Does MAME (which displays them symmetrically) apply any correction?</li>
+<li>Is there a timing mechanism on original hardware that would skew them anyway?</li>
+</ol>
+
+<h2>2. What the ROM actually encodes</h2>
+<p>The character set lives in the vector ROM ($3000-$3FFF on the 6502 bus). Each character is a subroutine of AVG short-vector (SVEC) opcodes, reached through the VGMSGA pointer table at $31E4, indexed by ASCVG character code (A = $16). The table entries are prebuilt JSRL opcodes; the entry for "A" resolves to vector address $3000.</p>
+<p>Decoding the SVEC words with the authoritative latch semantics from MAME's <code>avgdvg.cpp</code> (5-bit two's-complement deltas: high byte = opcode + dy, low byte = intensity + dx) gives the following stroke list for "A":</p>
+<pre><code>$3000: SVEC dx= +0 dy=+16 lit    (0,0)  -&gt; (0,16)    left leg, straight up
+$3002: SVEC dx= +8 dy= +8 lit    (0,16) -&gt; (8,24)    up-right to apex
+$3004: SVEC dx= +8 dy= -8 lit    (8,24) -&gt; (16,16)   down-right from apex
+$3006: SVEC dx= +0 dy=-16 lit    (16,16)-&gt; (16,0)    right leg, straight down
+$3008: SVEC dx=-16 dy= +8 blank  (16,0) -&gt; (0,8)
+$300A: SVEC dx=+16 dy= +0 lit    (0,8)  -&gt; (16,8)    crossbar
+$300C: SVEC dx= +8 dy= -8 blank  (16,8) -&gt; (24,0)    advance to next cell
+$300E: RTSL</code></pre>
+<p>The glyph is exactly mirror-symmetric: both legs are vertical, both span y = 0 to 16, and both terminate on the same baseline. The letters H, M, N, and W decode the same way &mdash; all verticals span the full 0-24 cell height with no leg-length differences. The rev-3 vector ROM pair (<code>136002-123.np3</code> + <code>136002-124.r3</code>) and the rev-4/5 combined ROM (<code>136002-138.np3</code>) contain byte-identical character data.</p>
+<p><strong>Conclusion on question 1: confirmed.</strong> The source data defines symmetric, even legs. The "new pcb" rendering in the post is what the ROM encodes.</p>
+
+<h2>3. MAME applies no correction</h2>
+<p>MAME emulates the AVG at the state-machine level &mdash; the same latch strobes and opcode decoding the hardware PROM sequencer performs &mdash; and hands each vector's exact integer endpoints to its renderer. There is no compensation, filtering, or cleanup pass; MAME simply does not model analog settling at all. It looks symmetric because the data is symmetric. <strong>Conclusion on question 2: no correction exists to remove.</strong></p>
+
+<h2>4. Why original hardware cannot produce the claimed skew</h2>
+
+<h3>4.1 Z and deflection are one circuit, not two</h3>
+<p>In the AVG, drawing a vector works as follows: the state machine loads dx/dy into the DAC latches, then starts the vector timer (the 7497 bit-rate-multiplier chain). That single timer window gates both the integrator run (deflection) and the Z output (blanking). Beam-on and beam-move are two outputs of one clocked circuit. There is no independent Z pipeline whose latency could be tuned "down to 1 clock cycle" &mdash; alignment is exact to zero cycles by construction. Atari did not solve a Z-versus-deflection synchronization problem; the architecture defines it away.</p>
+
+<h3>4.2 The residual analog effects have the wrong shape and size</h3>
+<p>Downstream of the synchronous gate, each path has analog propagation delay: the Z amplifier chain is fast (nanoseconds to a couple hundred nanoseconds), while the deflection path lags behind ideal position because integrator op-amps and the WG6100 deflection amplifiers have finite bandwidth. But examine what those errors actually do to the "A":</p>
+<ul>
+<li><strong>The entire outline is one continuous lit run.</strong> Z transitions exactly twice: beam-on at the bottom of the left leg, beam-off at the bottom of the right leg. A late beam-on clips a sliver off the start of the left leg. A late beam-off occurs after the state machine has already begun the next vector &mdash; the blanked move up-left toward the crossbar &mdash; so the beam draws a tiny tail in the <em>new</em> direction. It does not continue down the right leg's trajectory, because nothing drives the deflection that way anymore.</li>
+<li><strong>The beam never travels below the baseline.</strong> The deflection drive reverses at (16,0); the geometry required to "extend the right leg" does not exist in the signal. The only mechanism that puts the beam below baseline is deflection-amplifier overshoot, which is small, ringing-shaped, and unrelated to Z.</li>
+<li><strong>Deflection lag preserves segment lengths.</strong> The beam trails ideal position by a roughly constant group delay throughout a continuous run, so interiors and lengths are preserved; the visible residue is corner rounding at direction changes, symmetric between the two legs.</li>
+</ul>
+<p>These are the classic vector-monitor artifacts &mdash; bright endpoint dots, faint comet tails at direction changes, rounded corners &mdash; and they are what healthy original boards actually show. At a 1.5 MHz AVG clock, one cycle is about 667 ns against strokes drawn over many microseconds; clock-granularity effects amount to a few percent of a leg. The post's illustration shows roughly 40-50 percent leg-length asymmetry, two orders of magnitude beyond anything the claimed one-clock matching tolerance could produce.</p>
+
+<h3>4.3 Empirical check</h3>
+<p>Decades of direct observation of original Tempest PCBs on WG6100 monitors: characters render symmetrically to the eye, exactly as the ROM defines them. This is the reference standard the replica claims to match, and it does not exhibit the artifact. <strong>Conclusion on question 3: no such mechanism exists on original hardware at visible magnitude, and the specific asymmetry shown (legs of different lengths) is geometrically impossible there.</strong></p>
+
+<h2>5. Where the "timing consideration" actually comes from</h2>
+<p>The timing hazard only comes into existence when the board is rebuilt differently. If a replica re-derives Z and deflection through separate paths &mdash; for example, an FPGA reimplementation where the deflection DACs sit behind a pipelined or resampled interface while Z passes through a different register stage, or a modern DAC with multi-cycle latency the original monolithic DACs did not have &mdash; the designer has created precisely the race the original architecture precluded. Z then leads or lags deflection by whole clock cycles, the lit window slides relative to beam position, and the first and last strokes of every continuous lit run come out wrong: exactly the pathology of the "original pcb" illustration, and exactly the complaint now being fielded from a customer of the production board.</p>
+<p>"Tuning the analog section to match original hardware" is, in isolation, a legitimate task: a replica's DACs, integrators, and Z driver are rebuilt from modern parts with different slew and settling, and matching the original's beam dynamics requires adjustment. But correct tuning converges on the original's appearance &mdash; symmetric characters with minor endpoint dots &mdash; not on an exaggerated asymmetry the reference hardware never displays.</p>
+
+<h2>6. Assessment of the post</h2>
+<p>The post is not fabricated from nothing; its author evidently understands the draw order well enough to predict which leg would shorten and which end would grow <em>if</em> Z timing were skewed. But the argument inverts cause and effect. The asymmetry is not an original-hardware characteristic that his board faithfully reproduces; it is a defect his redesign introduced, reframed as authenticity ("Atari color vectors never had a perfect picture to begin with"). The ROM data, the AVG architecture, the emulation evidence, and the field observation of original hardware all agree against him, and the customer complaint is the empirical confirmation: the replica is the outlier.</p>
+
+<h2>7. Remediation: how a replica should fix the skew</h2>
+<p>The fix principle is the one the original architecture embodies: do not minimize latency in either path &mdash; match the latencies. The original AVG has zero skew not because its paths are fast but because Z and deflection leave the same synchronous gate. A replica that broke that symmetry must restore it. Three tiers apply, depending on where the latency came from.</p>
+
+<h3>7.1 Quantify first</h3>
+<p>Use a two-channel scope: one probe on the X (or Y) deflection output, one on the Z/blank line, triggered on the start of a vector. Run a diagnostic pattern rather than game code &mdash; ideally a single lit stroke followed by a blanked retrace, repeated, giving a clean ramp with a Z edge at each end. Measure the offset between Z assertion and the ramp starting, and between Z deassertion and the ramp ending. Two diagnostics fall out immediately: if the offset is equal at both ends, the error is pure pipeline skew, fixable with a delay; if it differs, the analog stage also has slew or settling asymmetry. A square drawn clockwise versus counterclockwise is a useful visual check &mdash; pipeline skew makes the corner artifacts flip sides with draw direction.</p>
+
+<h3>7.2 The digital fix</h3>
+<p>Delay the blanking signal by the same number of clocks as the deflection pipeline. If the replica placed the DAC interface behind N register stages (an SPI serializer, a pipelined DAC, registered CPLD outputs where the original PROM sequencer was combinational), Z needs an N-stage shift register clocked by the same clock. The cleaner structural version is to re-time all outputs &mdash; DAC latch enables, integrator run window, Z &mdash; through one final register stage, restoring the original's one-circuit property so future edits cannot reintroduce skew.</p>
+
+<h3>7.3 The analog residual: the PWM-DAC case</h3>
+<p>PWM-as-DAC is the worst offender because the reconstruction filter is itself the deflection path's latency. A PWM output requires an aggressive low-pass to suppress carrier ripple, and that filter has group delay: a first-order RC with corner f_c contributes roughly 1/(2&thinsp;&pi;&thinsp;f_c) of passband delay &mdash; a 100 kHz corner is about 1.6 &micro;s. If blanking is a direct digital output with near-zero delay, then against strokes drawn in roughly 10 &micro;s, the deflection lags Z by some 15 percent of a stroke &mdash; the same class and magnitude of artifact as the uneven-legs illustration. This is corroborated empirically: an independent FPGA reimplementation of Asteroids Deluxe using on-chip PWM for the video DACs exhibited exactly this artifact class.</p>
+<p>Three remedies, in ascending order of correctness:</p>
+<ol>
+<li><strong>Fixed digital delay on Z</strong> equal to the filter's low-frequency group delay (about 40 clocks at 25 MHz for the example above). Cheap and mostly sufficient; the residual is that first-order group delay is frequency-dependent, so fast and slow strokes compensate slightly differently.</li>
+<li><strong>Linear-phase filter plus fixed delay.</strong> Raise the PWM carrier &mdash; or generate sigma-delta at the FPGA clock rate, nearly free in fabric &mdash; so the filter corner moves well above the vector bandwidth, and use a Bessel alignment so group delay is flat. A single fixed Z delay then compensates all stroke speeds essentially exactly.</li>
+<li><strong>Give Z the same pipeline it is fighting.</strong> Where Z carries intensity levels (as on Asteroids Deluxe hardware), generate it as PWM or sigma-delta through a matched reconstruction filter &mdash; same topology, same corner, same group delay as X and Y. Matched latencies cancel identically, drift and tolerance track, and no delay is ever measured. This is the closest analog to the original design: identical paths cannot race.</li>
+</ol>
+<p>Alternatively, dissolve the problem: an inexpensive SPI or parallel R-2R DAC has small, fixed, integer-clock latency and makes remedy 1 exact.</p>
+
+<h3>7.4 Diagnosis order for a discrete recreation</h3>
+<p>For a board that nominally clones the original schematic, skew should not exist at all, so the scope measurement doubles as an audit. If Z leads deflection by an integer number of state-machine clocks, registered logic was substituted where the original was combinational &mdash; a state PROM reimplemented in a registered CPLD or GAL is the classic case &mdash; and the fix is a compensating register on Z, or better, removing the added register to match the original. If the error is analog-shaped &mdash; the offset differs between stroke start and end, or scales with stroke speed &mdash; the substitute DAC or integrator op-amps settle differently than the originals, and "tuning the analog section" is for once the correct phrase: match integrator RC products and op-amp slew to the original's, or accept the substitute parts and add a matched delay on Z.</p>
+<p>What does not work is the approach the post implies: measuring the digital timing to one clock, observing the picture is still wrong, and reclassifying the wrongness as authenticity. The residual was never in the digital timing &mdash; it is in the unmatched path latency, which one-clock digital matching cannot see.</p>
+
+<h2>Conclusion</h2>
+<p>The Tempest character set is defined mirror-symmetric in the vector ROM, byte-identically across ROM revisions, and MAME renders that geometry without correction. On original hardware, blanking and deflection are gated by the same synchronous timer, so digital Z-versus-deflection skew is structurally impossible, and the residual analog effects produce endpoint dots and corner rounding at nanosecond scale &mdash; never leg-length asymmetry, which the deflection geometry cannot generate at all. A replica board that displays uneven character legs has a Z-blanking bug of its own manufacture, most plausibly a pipeline misalignment between separately re-derived Z and deflection paths. The claim that this matches original boards is refuted by the primary evidence; the remaining open item is only <em>which</em> stage of the replica's Z path carries the misalignment, which requires the replica's own design files or a scope on the board to determine.</p>
+
+</main>
+</div>
+<script>
+(function(){
+  var toc=document.getElementById('toc');
+  var heads=document.querySelectorAll('#doc h2,#doc h3');
+  heads.forEach(function(h,i){
+    var id=h.textContent.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')||('sec-'+i);
+    h.id=id;
+    var a=document.createElement('a');
+    a.href='#'+id; a.textContent=h.textContent;
+    if(h.tagName==='H3')a.className='h3';
+    toc.appendChild(a);
+  });
+  document.documentElement.style.scrollBehavior='smooth';
+})();
+</script>
+</body>
+</html>
